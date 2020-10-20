@@ -1,3 +1,4 @@
+import 'package:portfolio_api/model/user.dart';
 import 'package:portfolio_api/portfolio_api.dart';
 import 'package:aqueduct_test/aqueduct_test.dart';
 
@@ -6,27 +7,33 @@ export 'package:aqueduct_test/aqueduct_test.dart';
 export 'package:test/test.dart';
 export 'package:aqueduct/aqueduct.dart';
 
-/// A testing harness for portfolio_api.
-///
-/// A harness for testing an aqueduct application. Example test file:
-///
-///         void main() {
-///           Harness harness = Harness()..install();
-///
-///           test("GET /path returns 200", () async {
-///             final response = await harness.agent.get("/path");
-///             expectResponse(response, 200);
-///           });
-///         }
-///
-class Harness extends TestHarness<PortfolioApiChannel> {
+class Harness extends TestHarness<PortfolioApiChannel> with TestHarnessAuthMixin<PortfolioApiChannel>, TestHarnessORMMixin {
   @override
   Future onSetUp() async {
-
+    await resetData();
+    publicAgent = await addClient("com.bartholome.portfolio");
   }
 
   @override
   Future onTearDown() async {
 
+  }
+
+  @override
+  ManagedContext get context => channel.context;
+
+  @override
+  AuthServer get authServer => channel.authServer;
+
+  Agent publicAgent;
+
+  Future<Agent> registerUser(User user, {Agent withClient}) async {
+    withClient ??= publicAgent;
+
+    final req = withClient.request("/register")
+      ..body = {"username": user.username, "password": user.password};
+    await req.post();
+
+    return loginUser(withClient, user.username, user.password);
   }
 }
