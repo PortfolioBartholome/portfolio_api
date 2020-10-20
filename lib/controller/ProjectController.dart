@@ -9,11 +9,9 @@ class ProjectController extends ResourceController {
   final ManagedContext context;
 
   @Operation.get()
-  Future<Response> getAllProjects({@Bind.query('name') String name}) async {
+  Future<Response> getAllProjects() async {
     final projectQuery = Query<Project>(context);
-    if (name != null) {
-      projectQuery.where((h) => h.name).contains(name, caseSensitive: false);
-    }
+
     final projects = await projectQuery.fetch();
 
     return Response.ok(projects);

@@ -54,12 +54,12 @@ class PortfolioApiChannel extends ApplicationChannel {
 
     // Set up protected route
     router
-        .route("/projectAdmin")
+        .route("/projectAdmin/[:id]")
         .link(() => Authorizer.bearer(authServer))
         .link(() => AdminController(context));
 
     router
-        .route("/project")
+        .route("/project/[:id]")
         .link(() => ProjectController(context));
 
     router
