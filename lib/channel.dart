@@ -64,6 +64,7 @@ class PortfolioApiChannel extends ApplicationChannel {
 
     router
         .route("/register")
+        .link(() => Authorizer.basic(authServer))
         .link(() => RegisterController(context, authServer));
 
     return router;

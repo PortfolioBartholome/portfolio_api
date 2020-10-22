@@ -3,24 +3,34 @@ import 'dart:async';
 import 'package:aqueduct/aqueduct.dart';
 import 'package:portfolio_api/model/user.dart';
 
-class RegisterController extends ResourceController {
-  RegisterController(this.context, this.authServer);
+class RegisterController extends QueryController<User> {
+  RegisterController(ManagedContext context, this.authServer) : super(context);
 
-  final ManagedContext context;
   final AuthServer authServer;
 
   @Operation.post()
-  Future<Response> createUser(@Bind.body() User user) async {
-    // Check for required parameters before we spend time hashing
-    if (user.username == null || user.password == null) {
+  Future<Response> createUser() async {
+    if (query.values.username == null || query.values.password == null) {
       return Response.badRequest(
           body: {"error": "username and password required."});
     }
 
-    user
-      ..salt = AuthUtility.generateRandomSalt()
-      ..hashedPassword = authServer.hashPassword(user.password, user.salt);
+    query.values.username = query.values.username.toLowerCase();
 
-    return Response.ok(await Query(context, values: user).insert());
+    final salt = AuthUtility.generateRandomSalt();
+    final hashedPassword =
+    AuthUtility.generatePasswordHash(query.values.password, salt);
+
+    query.values.hashedPassword = hashedPassword;
+    query.values.salt = salt;
+
+    final u = await query.insert();
+    final token = await authServer.authenticate(
+        u.username,
+        query.values.password,
+        request.authorization.credentials.username,
+        request.authorization.credentials.password);
+
+    return AuthController.tokenResponse(token);
   }
 }

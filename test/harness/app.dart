@@ -12,6 +12,7 @@ class Harness extends TestHarness<PortfolioApiChannel> with TestHarnessAuthMixin
   Future onSetUp() async {
     await resetData();
     publicAgent = await addClient("com.bartholome.portfolio");
+
   }
 
   @override

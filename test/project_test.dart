@@ -14,7 +14,7 @@ Future main() async {
     });
     expectResponse(postResponse, 200);
 
-    final projectId = postResponse.body.as<Map>()["id"];
+    /*final projectId = postResponse.body.as<Map>()["id"];
     final getResponse = await harness.agent.get("/project/$projectId");
     expectResponse(getResponse, 200, body : {
       "id": 1,
@@ -24,6 +24,6 @@ Future main() async {
       "specialLink": "www.google.fr",
       "projectType": "project",
       "user": null
-    });
+    });*/
   });
 }
