@@ -29,4 +29,24 @@ class AdminController extends ResourceController{
 
     return Response.ok(insertedProject);
   }
+
+  @Operation.put()
+  Future<Response> updateProject(@Bind.body() Project project) async {
+    var query = Query<Project>(context)
+      ..values.name = project.name
+      ..values.projectType = project.projectType
+      ..values.specialLink = project.specialLink
+      ..values.content = project.content
+      ..values.language = project.language
+      ..where((u) => u.id).equalTo(project.id);
+    final projectUpdated = await query.updateOne();
+
+    if (projectUpdated == null) {
+      return Response.notFound();
+    }
+    return Response.ok(projectUpdated);
+  }
+
+
+
 }

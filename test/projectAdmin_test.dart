@@ -35,7 +35,7 @@ Future main() async {
       "projectType":"project"
     });
     expectResponse(postResponse, 200);
-    
+
   });
 
   test("After POST to /project, GET /project/:id returns 200 with correct boody", () async {
@@ -79,6 +79,38 @@ Future main() async {
     await userAgent.delete("/projectAdmin/$projectId");
     final getResponse = await harness.agent.get("/project/$projectId");
     expectResponse(getResponse, 404);
+  });
+
+  test("After POST to /project, update /project then GET /project/:id returns 200 with new information", () async {
+    final registerResponse = await harness.publicAgent
+        .post("/register", body: {"username": "bob@stablekernel.com", "password": "foobaraxegrind12%"});
+    final String accessToken = registerResponse.body.as()["access_token"].toString();
+    final userAgent = Agent.from(harness.agent)..bearerAuthorization = accessToken;
+    final postResponse = await userAgent.post("/projectAdmin", body: {
+      "name":"Test",
+      "content":"LoremIpsum. DartLang",
+      "language": "Flutter",
+      "specialLink":"www.google.fr",
+      "projectType":"project"
+    });
+    final updateResponse = await userAgent.put("/projectAdmin",body: {
+      "id": 1,
+      "name":"Test2",
+      "content":"LoremIpsum. DartLang",
+      "language": "Flutter",
+      "specialLink":"www.google.fr",
+      "projectType":"project",
+      "user": null
+    });
+    expectResponse(updateResponse, 200, body : {
+      "id": 1,
+      "name": "Test2",
+      "content": "LoremIpsum. DartLang",
+      "language": "Flutter",
+      "specialLink": "www.google.fr",
+      "projectType": "project",
+      "user": null
+    });
   });
 
 
