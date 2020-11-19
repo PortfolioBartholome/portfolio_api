@@ -2,6 +2,8 @@ import 'package:aqueduct/managed_auth.dart';
 import 'package:portfolio_api/controller/AboutMeAdminController.dart';
 import 'package:portfolio_api/controller/AboutMeController.dart';
 import 'package:portfolio_api/controller/HomeController.dart';
+import 'package:portfolio_api/controller/KnowledgeAdminController.dart';
+import 'package:portfolio_api/controller/KnowledgeController.dart';
 import 'package:portfolio_api/controller/ProjectAdminController.dart';
 import 'package:portfolio_api/controller/ProjectController.dart';
 import 'package:portfolio_api/controller/RegisterController.dart';
@@ -63,6 +65,11 @@ class PortfolioApiChannel extends ApplicationChannel {
         .link(() => ProjectAdminController(context));
 
     router
+        .route("/knowledgeAdmin/[:id]")
+        .link(() => Authorizer.bearer(authServer))
+        .link(() => KnowledgeAdminController(context));
+
+    router
         .route("/homeAdmin/[:id]")
         .link(() => Authorizer.bearer(authServer))
         .link(() => HomeAdminController(context));
@@ -79,6 +86,10 @@ class PortfolioApiChannel extends ApplicationChannel {
     router
         .route("/aboutMe/[:id]")
         .link(() => AboutMeController(context));
+
+    router
+        .route("/knowledge/[:id]")
+        .link(() => KnowledgeController(context));
 
     router
         .route("/home/[:id]")
