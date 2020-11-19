@@ -1,4 +1,6 @@
 import 'package:aqueduct/managed_auth.dart';
+import 'package:portfolio_api/controller/AboutMeAdminController.dart';
+import 'package:portfolio_api/controller/AboutMeController.dart';
 import 'package:portfolio_api/controller/HomeController.dart';
 import 'package:portfolio_api/controller/ProjectAdminController.dart';
 import 'package:portfolio_api/controller/ProjectController.dart';
@@ -66,8 +68,17 @@ class PortfolioApiChannel extends ApplicationChannel {
         .link(() => HomeAdminController(context));
 
     router
+        .route("/aboutMeAdmin/[:id]")
+        .link(() => Authorizer.bearer(authServer))
+        .link(() => AboutMeAdminController(context));
+
+    router
         .route("/project/[:id]")
         .link(() => ProjectController(context));
+
+    router
+        .route("/aboutMe/[:id]")
+        .link(() => AboutMeController(context));
 
     router
         .route("/home/[:id]")
