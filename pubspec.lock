@@ -155,6 +155,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.1.4"
+  http_server:
+    dependency: "direct main"
+    description:
+      name: http_server
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.9.8+3"
   io:
     dependency: transitive
     description:
@@ -205,7 +212,7 @@ packages:
     source: hosted
     version: "1.2.3"
   mime:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: mime
       url: "https://pub.dartlang.org"

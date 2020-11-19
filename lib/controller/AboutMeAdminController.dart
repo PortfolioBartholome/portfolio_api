@@ -1,9 +1,13 @@
+import 'package:http_server/http_server.dart';
+import 'package:mime/mime.dart';
 import 'package:portfolio_api/model/AboutMe.dart';
 
 import '../portfolio_api.dart';
 
 class AboutMeAdminController extends ResourceController{
-  AboutMeAdminController(this.context);
+  AboutMeAdminController(this.context){
+    acceptedContentTypes = [ContentType("multipart", "form-data"),ContentType("application", "json")];
+  }
 
   final ManagedContext context;
 
@@ -45,6 +49,33 @@ class AboutMeAdminController extends ResourceController{
     return Response.ok(aboutMeUpdated);
   }
 
+  @Operation.put('id')
+  Future<Response> updateImage(@Bind.path('id') int id) async {
+    final transformer = MimeMultipartTransformer(request.raw.headers.contentType.parameters["boundary"]);
+    final bodyStream = Stream.fromIterable([await request.body.decode<List<int>>()]);
+    final parts = await transformer.bind(bodyStream).toList();
+
+    for (var part in parts) {
+      final HttpMultipartFormData multipart = HttpMultipartFormData.parse(part);
+
+      final content = multipart.cast<List<int>>();
+
+      final filePath = "data/${DateTime.now().millisecondsSinceEpoch}.jpg";
+
+      final query = Query<AboutMe>(context)
+        ..values.imagePath = filePath
+        ..where((u) => u.id).equalTo(id);
+
+      await query.updateOne();
+
+      final IOSink sink = File(filePath).openWrite();
+      await content.forEach(sink.add);
+      await sink.flush();
+      await sink.close();
+    }
+
+    return Response.ok({});
+  }
 
 
 }
