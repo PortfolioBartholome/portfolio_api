@@ -16,7 +16,6 @@ class RegisterController extends QueryController<User> {
     }
 
     query.values.username = query.values.username.toLowerCase();
-
     final salt = AuthUtility.generateRandomSalt();
     final hashedPassword =
     AuthUtility.generatePasswordHash(query.values.password, salt);

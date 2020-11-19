@@ -15,8 +15,8 @@ Future main() async {
       "name":"Test",
       "content":"LoremIpsum. DartLang",
       "language": "Flutter",
+      "imagePath": "",
       "specialLink":"www.google.fr",
-      "projectType":"project"
     });
     expectResponse(postResponse, 401);
   });
@@ -31,8 +31,8 @@ Future main() async {
       "name":"Test",
       "content":"LoremIpsum. DartLang",
       "language": "Flutter",
+      "imagePath": "",
       "specialLink":"www.google.fr",
-      "projectType":"project"
     });
     expectResponse(postResponse, 200);
 
@@ -47,8 +47,8 @@ Future main() async {
       "name":"Test",
       "content":"LoremIpsum. DartLang",
       "language": "Flutter",
+      "imagePath": "",
       "specialLink":"www.google.fr",
-      "projectType":"project"
     });
     final projectId = postResponse.body.as<Map>()["id"];
     final getResponse = await harness.agent.get("/project/$projectId");
@@ -57,9 +57,8 @@ Future main() async {
       "name": "Test",
       "content": "LoremIpsum. DartLang",
       "language": "Flutter",
+      "imagePath": "",
       "specialLink": "www.google.fr",
-      "projectType": "project",
-      "user": null
     });
   });
 
@@ -72,8 +71,8 @@ Future main() async {
       "name":"Test",
       "content":"LoremIpsum. DartLang",
       "language": "Flutter",
+      "imagePath": "",
       "specialLink":"www.google.fr",
-      "projectType":"project"
     });
     final projectId = postResponse.body.as<Map>()["id"];
     await userAgent.delete("/projectAdmin/$projectId");
@@ -90,26 +89,24 @@ Future main() async {
       "name":"Test",
       "content":"LoremIpsum. DartLang",
       "language": "Flutter",
+      "imagePath": "",
       "specialLink":"www.google.fr",
-      "projectType":"project"
     });
     final updateResponse = await userAgent.put("/projectAdmin",body: {
       "id": 1,
       "name":"Test2",
       "content":"LoremIpsum. DartLang",
       "language": "Flutter",
+      "imagePath": "",
       "specialLink":"www.google.fr",
-      "projectType":"project",
-      "user": null
     });
     expectResponse(updateResponse, 200, body : {
       "id": 1,
       "name": "Test2",
       "content": "LoremIpsum. DartLang",
       "language": "Flutter",
+      "imagePath": "",
       "specialLink": "www.google.fr",
-      "projectType": "project",
-      "user": null
     });
   });
 

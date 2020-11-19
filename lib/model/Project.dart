@@ -1,5 +1,3 @@
-import 'package:portfolio_api/model/user.dart';
-
 import '../portfolio_api.dart';
 
 class Project extends ManagedObject<_Project> implements _Project {}
@@ -21,8 +19,5 @@ class _Project {
   String specialLink;
 
   @Column(nullable: false)
-  String projectType;
-
-  @Relate(#projects)
-  User user;
+  String imagePath;
 }
