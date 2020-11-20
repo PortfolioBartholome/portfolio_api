@@ -57,6 +57,7 @@ Future main() async {
       "content": "LoremIpsum. DartLang",
       "imagePath": "",
       "specialLink": "www.google.fr",
+      "type":"Home"
     });
   });
 
@@ -65,7 +66,7 @@ Future main() async {
         .post("/register", body: {"username": "bob@stablekernel.com", "password": "foobaraxegrind12%"});
     final String accessToken = registerResponse.body.as()["access_token"].toString();
     final userAgent = Agent.from(harness.agent)..bearerAuthorization = accessToken;
-    final postResponse = await userAgent.post("/homeAdmin", body: {
+    await userAgent.post("/homeAdmin", body: {
       "content":"LoremIpsum. DartLang",
       "imagePath": "",
       "specialLink":"www.google.fr",
@@ -96,6 +97,7 @@ Future main() async {
       "content": "LoremIpsum. ErtLang",
       "imagePath": "",
       "specialLink": "www.google.fr",
+      "type":"Home"
     });
   });
 

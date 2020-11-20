@@ -62,6 +62,7 @@ Future main() async {
       "language": "Flutter",
       "imagePath": "",
       "specialLink": "www.google.fr",
+      "type":"Knowledge"
     });
   });
 
@@ -120,6 +121,7 @@ Future main() async {
       "language": "Flutter",
       "imagePath": "",
       "specialLink": "www.google.fr",
+      "type":"Knowledge"
     });
   });
 }

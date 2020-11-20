@@ -57,6 +57,7 @@ Future main() async {
       "content": "LoremIpsum. DartLang",
       "imagePath": "",
       "specialLink": "www.google.fr",
+      "type":"AboutMe"
     });
   });
 
@@ -96,6 +97,7 @@ Future main() async {
       "content": "LoremIpsum. ErtLang",
       "imagePath": "",
       "specialLink": "www.google.fr",
+      "type":"AboutMe"
     });
   });
 

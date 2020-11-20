@@ -59,6 +59,7 @@ Future main() async {
       "language": "Flutter",
       "imagePath": "",
       "specialLink": "www.google.fr",
+      "type":"Project"
     });
   });
 
@@ -85,7 +86,7 @@ Future main() async {
         .post("/register", body: {"username": "bob@stablekernel.com", "password": "foobaraxegrind12%"});
     final String accessToken = registerResponse.body.as()["access_token"].toString();
     final userAgent = Agent.from(harness.agent)..bearerAuthorization = accessToken;
-    final postResponse = await userAgent.post("/projectAdmin", body: {
+    await userAgent.post("/projectAdmin", body: {
       "name":"Test",
       "content":"LoremIpsum. DartLang",
       "language": "Flutter",
@@ -107,6 +108,7 @@ Future main() async {
       "language": "Flutter",
       "imagePath": "",
       "specialLink": "www.google.fr",
+      "type":"Project"
     });
   });
 
