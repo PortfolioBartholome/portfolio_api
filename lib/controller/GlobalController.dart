@@ -1,6 +1,10 @@
 import 'dart:async';
 
 import 'package:aqueduct/aqueduct.dart';
+import 'package:portfolio_api/model/AboutMe.dart';
+import 'package:portfolio_api/model/Element.dart';
+import 'package:portfolio_api/model/Home.dart';
+import 'package:portfolio_api/model/Knowledge.dart';
 import 'package:portfolio_api/model/Project.dart';
 
 class GlobalController extends ResourceController {
@@ -9,35 +13,21 @@ class GlobalController extends ResourceController {
   final ManagedContext context;
 
   @Operation.get()
-  Future<Response> getAllProjectsAndAboutMeAndCV({@Bind.query('name') String name}) async {
+  Future<Response> getAllEverything() async {
     final projectQuery = Query<Project>(context);
-    if (name != null) {
-      projectQuery.where((h) => h.name).contains(name, caseSensitive: false);
-    }
+    final homeQuery = Query<Home>(context);
+    final knowledgeQuery = Query<Knowledge>(context);
+    final aboutMeQuery = Query<AboutMe>(context);
     final projects = await projectQuery.fetch();
-
-    return Response.ok(projects);
+    final home = await homeQuery.fetch();
+    final knowledge = await knowledgeQuery.fetch();
+    final aboutMe = await aboutMeQuery.fetch();
+    final List<Element> elements = [];
+    elements.addAll(projects);
+    elements.addAll(home);
+    elements.addAll(aboutMe);
+    elements.addAll(knowledge);
+    return Response.ok(elements);
   }
 
-  @Operation.post()
-  Future<Response> createProject(@Bind.body(ignore: ["id"]) Project inputProject) async {
-    final query = Query<Project>(context)
-      ..values = inputProject;
-
-    final insertedProject = await query.insert();
-
-    return Response.ok(insertedProject);
-  }
-  @Operation.get('id')
-  Future<Response> getProjectByID(@Bind.path('id') int id) async {
-    final projectQuery = Query<Project>(context)
-      ..where((h) => h.id).equalTo(id);
-
-    final project = await projectQuery.fetchOne();
-
-    if (project == null) {
-      return Response.notFound();
-    }
-    return Response.ok(project);
-  }
 }

@@ -1,6 +1,7 @@
 import 'package:aqueduct/managed_auth.dart';
 import 'package:portfolio_api/controller/AboutMeAdminController.dart';
 import 'package:portfolio_api/controller/AboutMeController.dart';
+import 'package:portfolio_api/controller/GlobalController.dart';
 import 'package:portfolio_api/controller/HomeController.dart';
 import 'package:portfolio_api/controller/KnowledgeAdminController.dart';
 import 'package:portfolio_api/controller/KnowledgeController.dart';
@@ -82,6 +83,10 @@ class PortfolioApiChannel extends ApplicationChannel {
     router
         .route("/project/[:id]")
         .link(() => ProjectController(context));
+
+    router
+        .route("/global/[:id]")
+        .link(() => GlobalController(context));
 
     router
         .route("/aboutMe/[:id]")
