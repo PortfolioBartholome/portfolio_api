@@ -9,7 +9,6 @@ class _Project extends Element {
   @primaryKey
   int id;
 
-  @override
   @Column(nullable: false)
   String name;
 
@@ -17,7 +16,6 @@ class _Project extends Element {
   @Column(nullable: false)
   String content;
 
-  @override
   @Column(nullable: false)
   String language;
 
@@ -30,6 +28,10 @@ class _Project extends Element {
   String imagePath;
 
   @override
+  @Column(nullable: false,defaultValue: "'Project'")
+  String type;
+
+  @override
   Map<String, dynamic> asMap() {
     return {
       'id' : id,
@@ -37,7 +39,8 @@ class _Project extends Element {
       'specialLink':specialLink,
       'imagePath':imagePath,
       'language': language != null ? language : "",
-      'name': name != null ? name : ""
+      'name': name != null ? name : "",
+      'type':type
     };
   }
 
@@ -49,5 +52,6 @@ class _Project extends Element {
     imagePath = object['imagePath'] as String;
     name = object['name'] != null ? (object['name'] as String) : "";
     language = object['language'] != null ? (object['language'] as String) : "";
+    type = "Project";
   }
 }

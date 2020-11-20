@@ -22,12 +22,17 @@ class _AboutMe extends Element {
   String imagePath;
 
   @override
+  @Column(nullable: false,defaultValue: "'AboutMe'")
+  String type;
+
+  @override
   Map<String, dynamic> asMap() {
     return {
       'id' : id,
       'content': content,
       'specialLink':specialLink,
       'imagePath':imagePath,
+      'type':type
     };
   }
 
@@ -37,5 +42,6 @@ class _AboutMe extends Element {
     content = object['content'] as String;
     specialLink = object['specialLink'] as String;
     imagePath = object['imagePath'] as String;
+    type = "AboutMe";
   }
 }

@@ -9,5 +9,7 @@ abstract class Element extends Serializable {
 
   String imagePath;
 
+  String type;
+
 }
 
