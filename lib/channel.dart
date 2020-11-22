@@ -53,6 +53,8 @@ class PortfolioApiChannel extends ApplicationChannel {
   Controller get entryPoint {
     final router = Router();
 
+
+    router.route("/files/*").link(() => FileController("public/"));
     // Set up auth token route- this grants and refresh tokens
     router.route("/auth/token").link(() => AuthController(authServer));
 

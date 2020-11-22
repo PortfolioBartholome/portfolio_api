@@ -54,27 +54,31 @@ class HomeAdminController extends ResourceController{
     final transformer = MimeMultipartTransformer(request.raw.headers.contentType.parameters["boundary"]);
     final bodyStream = Stream.fromIterable([await request.body.decode<List<int>>()]);
     final parts = await transformer.bind(bodyStream).toList();
-
+    Home home;
     for (var part in parts) {
       final HttpMultipartFormData multipart = HttpMultipartFormData.parse(part);
 
       final content = multipart.cast<List<int>>();
 
-      final filePath = "data/${DateTime.now().millisecondsSinceEpoch}.jpg";
+      final now = DateTime.now().millisecondsSinceEpoch;
+
+      final fileRegisteredPath = "public/${now}.jpg";
+
+      final fileSecretPath = "files/${now}.jpg";
 
       final query = Query<Home>(context)
-        ..values.imagePath = filePath
+        ..values.imagePath = fileSecretPath
         ..where((u) => u.id).equalTo(id);
 
-      await query.updateOne();
+      home = await query.updateOne();
 
-      final IOSink sink = File(filePath).openWrite();
+      final IOSink sink = File(fileRegisteredPath).openWrite();
       await content.forEach(sink.add);
       await sink.flush();
       await sink.close();
     }
 
-    return Response.ok({});
+    return Response.ok(home);
   }
 
 
