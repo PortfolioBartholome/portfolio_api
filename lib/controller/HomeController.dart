@@ -14,11 +14,6 @@ class HomeController extends ResourceController {
 
     final home = await homeQuery.fetchOne();
 
-    if(home == null)
-      return Response.notFound();
-    else
-      return Response.ok(home);
+    return home == null ? Response.notFound() : Response.ok(home);
   }
-
-
 }

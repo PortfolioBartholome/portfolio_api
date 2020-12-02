@@ -1,5 +1,6 @@
 import 'package:portfolio_api/portfolio_api.dart';
 
+
 abstract class Element extends Serializable {
   int id;
 

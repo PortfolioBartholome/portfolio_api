@@ -10,6 +10,7 @@ dependencies:
   aqueduct: ^4.0.0-b1
   mime:
   http_server:
+  path:
 
 dev_dependencies:
   test: ^1.0.0

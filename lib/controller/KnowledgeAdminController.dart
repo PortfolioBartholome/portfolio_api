@@ -1,12 +1,16 @@
 import 'package:http_server/http_server.dart';
 import 'package:mime/mime.dart';
 import 'package:portfolio_api/model/Knowledge.dart';
+import 'package:portfolio_api/tools/FileExtension.dart';
 
 import '../portfolio_api.dart';
 
-class KnowledgeAdminController extends ResourceController{
-  KnowledgeAdminController(this.context){
-    acceptedContentTypes = [ContentType("multipart", "form-data"),ContentType("application", "json")];
+class KnowledgeAdminController extends ResourceController {
+  KnowledgeAdminController(this.context) {
+    acceptedContentTypes = [
+      ContentType("multipart", "form-data"),
+      ContentType("application", "json")
+    ];
   }
 
   final ManagedContext context;
@@ -18,20 +22,19 @@ class KnowledgeAdminController extends ResourceController{
 
     final int knowledge = await knowledgeQuery.delete();
 
-    if (knowledge == 0) {
-      return Response.notFound();
-    }
-    return Response.accepted();
+    return knowledge == 0 ? Response.notFound() : Response.accepted();
   }
 
   @Operation.post()
-  Future<Response> createKnowledge(@Bind.body(ignore: ["id"]) Knowledge knowledge) async {
-    final query = Query<Knowledge>(context)
-      ..values = knowledge;
+  Future<Response> createKnowledge(
+      @Bind.body(ignore: ["id"]) Knowledge knowledge) async {
+    final query = Query<Knowledge>(context)..values = knowledge;
 
     final insertedKnowledge = await query.insert();
 
-    return Response.ok(insertedKnowledge);
+    return insertedKnowledge == null
+        ? Response.badRequest()
+        : Response.ok(insertedKnowledge);
   }
 
   @Operation.put()
@@ -52,32 +55,36 @@ class KnowledgeAdminController extends ResourceController{
 
   @Operation.put('id')
   Future<Response> updateImage(@Bind.path('id') int id) async {
-    final transformer = MimeMultipartTransformer(request.raw.headers.contentType.parameters["boundary"]);
-    final bodyStream = Stream.fromIterable([await request.body.decode<List<int>>()]);
+    final transformer = MimeMultipartTransformer(
+        request.raw.headers.contentType.parameters["boundary"]);
+    final bodyStream =
+        Stream.fromIterable([await request.body.decode<List<int>>()]);
     final parts = await transformer.bind(bodyStream).toList();
-
+    Knowledge knowledge;
     for (var part in parts) {
       final HttpMultipartFormData multipart = HttpMultipartFormData.parse(part);
-
+      final FileExtension fileExtension =
+          FileExtension(part.headers['content-disposition'].split(";"));
+      final String extension = fileExtension.getExtension();
       final content = multipart.cast<List<int>>();
 
-      final filePath = "data/${DateTime.now().millisecondsSinceEpoch}.jpg";
+      final now = DateTime.now().millisecondsSinceEpoch;
+
+      final fileRegisteredPath = "public/${now}$extension";
+
+      final fileSecretPath = "files/${now}$extension";
 
       final query = Query<Knowledge>(context)
-        ..values.imagePath = filePath
+        ..values.imagePath = fileSecretPath
         ..where((u) => u.id).equalTo(id);
 
-      await query.updateOne();
+      knowledge = await query.updateOne();
 
-      final IOSink sink = File(filePath).openWrite();
+      final IOSink sink = File(fileRegisteredPath).openWrite();
       await content.forEach(sink.add);
       await sink.flush();
       await sink.close();
     }
-
-    return Response.ok({});
+    return knowledge == null ? Response.badRequest() : Response.ok(knowledge);
   }
-
-
-
 }

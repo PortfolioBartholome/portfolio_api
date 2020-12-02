@@ -13,3 +13,4 @@ Dart_Packages.xml
 .idea/
 /migrations
 *.aqueduct.pid
+public
