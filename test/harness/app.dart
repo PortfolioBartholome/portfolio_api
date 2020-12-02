@@ -7,18 +7,20 @@ export 'package:aqueduct_test/aqueduct_test.dart';
 export 'package:test/test.dart';
 export 'package:aqueduct/aqueduct.dart';
 
-class Harness extends TestHarness<PortfolioApiChannel> with TestHarnessAuthMixin<PortfolioApiChannel>, TestHarnessORMMixin {
+class Harness extends TestHarness<PortfolioApiChannel>
+    with TestHarnessAuthMixin<PortfolioApiChannel>, TestHarnessORMMixin {
   @override
   Future onSetUp() async {
     await resetData();
     publicAgent = await addClient("com.bartholome.portfolio");
-
   }
 
   @override
-  Future onTearDown() async {
-
+  Future afterStart() async {
   }
+
+  @override
+  Future onTearDown() async {}
 
   @override
   ManagedContext get context => channel.context;
